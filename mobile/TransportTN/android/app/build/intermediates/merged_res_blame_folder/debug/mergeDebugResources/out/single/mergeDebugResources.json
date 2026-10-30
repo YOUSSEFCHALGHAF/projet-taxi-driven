@@ -1,0 +1,94 @@
+[
+    {
+        "merged": "com.transporttn.app-debug-43:/layout_item_ligne.xml.flat",
+        "source": "com.transporttn.app-main-45:/layout/item_ligne.xml"
+    },
+    {
+        "merged": "com.transporttn.app-debug-43:/layout_fragment_profil.xml.flat",
+        "source": "com.transporttn.app-main-45:/layout/fragment_profil.xml"
+    },
+    {
+        "merged": "com.transporttn.app-debug-43:/layout_activity_taxi_tracking.xml.flat",
+        "source": "com.transporttn.app-main-45:/layout/activity_taxi_tracking.xml"
+    },
+    {
+        "merged": "com.transporttn.app-debug-43:/menu_bottom_nav_menu.xml.flat",
+        "source": "com.transporttn.app-main-45:/menu/bottom_nav_menu.xml"
+    },
+    {
+        "merged": "com.transporttn.app-debug-43:/layout_fragment_collectif.xml.flat",
+        "source": "com.transporttn.app-main-45:/layout/fragment_collectif.xml"
+    },
+    {
+        "merged": "com.transporttn.app-debug-43:/drawable_ic_home.xml.flat",
+        "source": "com.transporttn.app-main-45:/drawable/ic_home.xml"
+    },
+    {
+        "merged": "com.transporttn.app-debug-43:/layout_activity_main.xml.flat",
+        "source": "com.transporttn.app-main-45:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.transporttn.app-debug-43:/drawable_ic_notification.xml.flat",
+        "source": "com.transporttn.app-main-45:/drawable/ic_notification.xml"
+    },
+    {
+        "merged": "com.transporttn.app-debug-43:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.transporttn.app-main-45:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.transporttn.app-debug-43:/layout_fragment_taxi.xml.flat",
+        "source": "com.transporttn.app-main-45:/layout/fragment_taxi.xml"
+    },
+    {
+        "merged": "com.transporttn.app-debug-43:/layout_activity_ticket_detail.xml.flat",
+        "source": "com.transporttn.app-main-45:/layout/activity_ticket_detail.xml"
+    },
+    {
+        "merged": "com.transporttn.app-debug-43:/drawable_ic_profile.xml.flat",
+        "source": "com.transporttn.app-main-45:/drawable/ic_profile.xml"
+    },
+    {
+        "merged": "com.transporttn.app-debug-43:/layout_activity_otp.xml.flat",
+        "source": "com.transporttn.app-main-45:/layout/activity_otp.xml"
+    },
+    {
+        "merged": "com.transporttn.app-debug-43:/layout_activity_login.xml.flat",
+        "source": "com.transporttn.app-main-45:/layout/activity_login.xml"
+    },
+    {
+        "merged": "com.transporttn.app-debug-43:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.transporttn.app-main-45:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "com.transporttn.app-debug-43:/drawable_ic_launcher_background.xml.flat",
+        "source": "com.transporttn.app-main-45:/drawable/ic_launcher_background.xml"
+    },
+    {
+        "merged": "com.transporttn.app-debug-43:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.transporttn.app-main-45:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "com.transporttn.app-debug-43:/layout_activity_splash.xml.flat",
+        "source": "com.transporttn.app-main-45:/layout/activity_splash.xml"
+    },
+    {
+        "merged": "com.transporttn.app-debug-43:/layout_fragment_home.xml.flat",
+        "source": "com.transporttn.app-main-45:/layout/fragment_home.xml"
+    },
+    {
+        "merged": "com.transporttn.app-debug-43:/drawable_ic_collectif.xml.flat",
+        "source": "com.transporttn.app-main-45:/drawable/ic_collectif.xml"
+    },
+    {
+        "merged": "com.transporttn.app-debug-43:/drawable_ic_taxi.xml.flat",
+        "source": "com.transporttn.app-main-45:/drawable/ic_taxi.xml"
+    },
+    {
+        "merged": "com.transporttn.app-debug-43:/drawable_ic_bus.xml.flat",
+        "source": "com.transporttn.app-main-45:/drawable/ic_bus.xml"
+    },
+    {
+        "merged": "com.transporttn.app-debug-43:/layout_fragment_bus.xml.flat",
+        "source": "com.transporttn.app-main-45:/layout/fragment_bus.xml"
+    }
+]

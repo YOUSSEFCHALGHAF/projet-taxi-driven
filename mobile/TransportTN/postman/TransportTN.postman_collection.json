@@ -1,0 +1,297 @@
+{
+  "info": {
+    "name": "TransportTN API",
+    "description": "Collection Postman pour l'API REST TransportTN (25 requetes). Backend Spring Boot - Authentification par OTP (telephone) - JWT applicatif.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "token", "value": "" },
+    { "key": "phone", "value": "+21620123456" },
+    { "key": "otpCode", "value": "123456" },
+    { "key": "ligneId", "value": "1" },
+    { "key": "reservationId", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "1. Auth - Demander un code OTP",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/auth/otp/request",
+        "body": { "mode": "raw", "raw": "{\n  \"phone\": \"{{phone}}\"\n}" }
+      }
+    },
+    {
+      "name": "2. Auth - Verifier le code OTP (login/inscription)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/auth/otp/verify",
+        "body": { "mode": "raw", "raw": "{\n  \"phone\": \"{{phone}}\",\n  \"code\": \"{{otpCode}}\",\n  \"name\": \"Ahmed Ben Ali\"\n}" }
+      }
+    },
+    {
+      "name": "3. Auth - Profil utilisateur connecte",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{baseUrl}}/api/auth/me"
+      }
+    },
+    {
+      "name": "4. Users - Mettre a jour le token FCM",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/api/users/fcm-token",
+        "body": { "mode": "raw", "raw": "{\n  \"fcmToken\": \"exemple-token-fcm-android\"\n}" }
+      }
+    },
+    {
+      "name": "5. Reservations - Creer une reservation Taxi",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/api/reservations/taxi",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"pickupAddress\": \"Avenue Habib Bourguiba, Tunis\",\n  \"pickupLat\": 36.7992,\n  \"pickupLng\": 10.1815,\n  \"dropoffAddress\": \"Aeroport Tunis-Carthage\",\n  \"dropoffLat\": 36.8510,\n  \"dropoffLng\": 10.2272,\n  \"paymentMode\": \"ESPECES\"\n}"
+        }
+      }
+    },
+    {
+      "name": "6. Reservations - Lignes Taxi Collectif disponibles",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{baseUrl}}/api/reservations/lignes/collectif?date=2026-08-20"
+      }
+    },
+    {
+      "name": "7. Reservations - Reserver des places Taxi Collectif",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/api/reservations/collectif",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"ligneId\": {{ligneId}},\n  \"seatsCount\": 2,\n  \"travelDate\": \"2026-08-20\"\n}"
+        }
+      }
+    },
+    {
+      "name": "8. Reservations - Lignes Bus disponibles",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{baseUrl}}/api/reservations/lignes/bus?date=2026-08-20"
+      }
+    },
+    {
+      "name": "9. Reservations - Acheter un/des ticket(s) de Bus",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/api/reservations/bus",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"ligneId\": {{ligneId}},\n  \"travelDate\": \"2026-08-20\",\n  \"quantity\": 2\n}"
+        }
+      }
+    },
+    {
+      "name": "10. Reservations - Mes tickets Bus (QR codes)",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{baseUrl}}/api/reservations/tickets"
+      }
+    },
+    {
+      "name": "11. Reservations - Historique des reservations (page 0)",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{baseUrl}}/api/reservations/history?page=0&size=10"
+      }
+    },
+    {
+      "name": "12. Reservations - Mettre a jour le statut (chauffeur/admin)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/api/reservations/{{reservationId}}/status",
+        "body": { "mode": "raw", "raw": "{\n  \"status\": \"ASSIGNED\"\n}" }
+      }
+    },
+    {
+      "name": "13. Reservations - Statut IN_PROGRESS",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/api/reservations/{{reservationId}}/status",
+        "body": { "mode": "raw", "raw": "{\n  \"status\": \"IN_PROGRESS\"\n}" }
+      }
+    },
+    {
+      "name": "14. Reservations - Statut COMPLETED",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/api/reservations/{{reservationId}}/status",
+        "body": { "mode": "raw", "raw": "{\n  \"status\": \"COMPLETED\"\n}" }
+      }
+    },
+    {
+      "name": "15. Reservations - Statut CANCELLED",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/api/reservations/{{reservationId}}/status",
+        "body": { "mode": "raw", "raw": "{\n  \"status\": \"CANCELLED\"\n}" }
+      }
+    },
+    {
+      "name": "16. Driver - Mettre a jour la position GPS",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/api/driver/location",
+        "body": { "mode": "raw", "raw": "{\n  \"latitude\": 36.8065,\n  \"longitude\": 10.1815\n}" }
+      }
+    },
+    {
+      "name": "17. Driver - Se rendre disponible",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{baseUrl}}/api/driver/available?available=true"
+      }
+    },
+    {
+      "name": "18. Driver - Se rendre indisponible",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": "{{baseUrl}}/api/driver/available?available=false"
+      }
+    },
+    {
+      "name": "19. Admin - Creer une ligne Bus",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/api/admin/lignes",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Tunis - Gabes\",\n  \"departure\": \"Tunis\",\n  \"destination\": \"Gabes\",\n  \"departTime\": \"10:00:00\",\n  \"price\": 30.0,\n  \"totalSeats\": 45,\n  \"mode\": \"BUS\",\n  \"active\": true\n}"
+        }
+      }
+    },
+    {
+      "name": "20. Admin - Creer une ligne Taxi Collectif",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/api/admin/lignes",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Tunis - La Marsa\",\n  \"departure\": \"Tunis\",\n  \"destination\": \"La Marsa\",\n  \"departTime\": \"08:30:00\",\n  \"price\": 4.0,\n  \"totalSeats\": 8,\n  \"mode\": \"COLLECTIF\",\n  \"active\": true\n}"
+        }
+      }
+    },
+    {
+      "name": "21. Test - Reservation Taxi avec paiement carte",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/api/reservations/taxi",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"pickupAddress\": \"Lac 2, Tunis\",\n  \"pickupLat\": 36.8383,\n  \"pickupLng\": 10.2419,\n  \"dropoffAddress\": \"Centre Ville, Tunis\",\n  \"dropoffLat\": 36.7992,\n  \"dropoffLng\": 10.1815,\n  \"paymentMode\": \"CARTE\"\n}"
+        }
+      }
+    },
+    {
+      "name": "22. Test - Reservation Collectif : places insuffisantes (erreur 409 attendue)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/api/reservations/collectif",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"ligneId\": {{ligneId}},\n  \"seatsCount\": 4,\n  \"travelDate\": \"2026-08-20\"\n}"
+        }
+      }
+    },
+    {
+      "name": "23. Test - OTP invalide (erreur 400 attendue)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/auth/otp/verify",
+        "body": { "mode": "raw", "raw": "{\n  \"phone\": \"{{phone}}\",\n  \"code\": \"000000\"\n}" }
+      }
+    },
+    {
+      "name": "24. Test - Requete sans token (erreur 401/403 attendue)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/auth/me"
+      }
+    },
+    {
+      "name": "25. Test - Route Admin avec role CLIENT (erreur 403 attendue)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}" }
+        ],
+        "url": "{{baseUrl}}/api/admin/lignes",
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Test\",\n  \"departure\": \"A\",\n  \"destination\": \"B\",\n  \"departTime\": \"09:00:00\",\n  \"price\": 5.0,\n  \"totalSeats\": 8,\n  \"mode\": \"COLLECTIF\"\n}" }
+      }
+    }
+  ]
+}

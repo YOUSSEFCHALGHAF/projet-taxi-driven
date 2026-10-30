@@ -1,0 +1,51 @@
+@startuml
+title TransportTN — Architecture en couches (vue MVC)
+skinparam componentStyle rectangle
+skinparam shadowing false
+skinparam defaultFontSize 12
+left to right direction
+
+actor "Client / Chauffeur / Admin" as U
+
+package "Frontend — React + Vite + Tailwind + React Router" as FE #E3F2FD {
+  [Pages (Vue)] as Pages
+  [Composants UI] as Comp
+  [AuthContext (JWT)] as Ctx
+  [Services API (axios)] as Api
+  [Client STOMP (suivi)] as Ws
+  [Firebase JS SDK\n+ service worker FCM] as FcmFront
+}
+
+package "Backend — Spring Boot 3.2 / Java 17 / Maven" as BE #E8F5E9 {
+  [Controllers REST\n(Contrôleur)] as Ctrl
+  [Spring Security\n+ filtre JWT] as Sec
+  [Services métier] as Svc
+  [Repositories\nSpring Data JPA] as Repo
+  [Entités JPA\n(Modèle)] as Model
+  [WebSocket STOMP\n/ws, /topic/...] as WsBack
+  [NotificationService\n(Firebase Admin SDK)] as NotifSvc
+}
+
+database "MySQL 8" as DB #FFF8E1
+cloud "Firebase Cloud\nMessaging" as FCM #FFEBEE
+cloud "OpenStreetMap\n(tuiles Leaflet)" as OSM
+
+U --> Pages
+Pages --> Comp
+Pages --> Ctx
+Pages --> Api
+Pages --> Ws
+Pages --> FcmFront
+Api --> Sec : HTTPS / JSON\nAuthorization: Bearer JWT
+Sec --> Ctrl
+Ctrl --> Svc
+Svc --> Repo
+Repo --> Model
+Model --> DB : JPA / Hibernate
+Ws --> WsBack : WebSocket
+Svc --> WsBack : diffusion position
+Svc --> NotifSvc
+NotifSvc --> FCM : envoi push
+FCM ..> FcmFront : notification navigateur
+Comp ..> OSM : tuiles carte
+@enduml

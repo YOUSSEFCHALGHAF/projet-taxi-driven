@@ -1,0 +1,17 @@
+# Java / Maven
+backend/target/
+*.class
+*.log
+# IDE
+.idea/
+*.iml
+.vscode/
+# Secrets (clés Firebase, .env)
+.env
+**/firebase-service-account*.json
+# Node (étape 5)
+frontend/node_modules/
+frontend/dist/
+# OS
+.DS_Store
+Thumbs.db

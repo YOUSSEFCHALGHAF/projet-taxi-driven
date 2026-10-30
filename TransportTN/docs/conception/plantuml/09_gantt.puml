@@ -1,0 +1,58 @@
+@startgantt
+title TransportTN — Planning prévisionnel (diagramme de Gantt)
+language fr
+printscale weekly zoom 4
+Project starts 2026-11-02
+saturday are closed
+sunday are closed
+
+-- Phase 0 : Analyse et conception --
+[Analyse du cahier des charges] as [A1] lasts 2 days
+[Diagrammes UML (PlantUML)] as [A2] lasts 3 days
+[A2] starts at [A1]'s end
+[Jalon : conception validée] happens at [A2]'s end
+
+-- Phase 1 : Mise en place --
+[Initialisation React/Vite/Tailwind] as [B1] lasts 2 days
+[B1] starts at [A2]'s end
+[Initialisation Spring Boot + MySQL] as [B2] lasts 2 days
+[B2] starts at [A2]'s end
+[Docker Compose (MySQL)] as [B3] lasts 1 day
+[B3] starts at [B2]'s end
+
+-- Phase 2 : Authentification --
+[Spring Security + JWT + rôles] as [C1] lasts 3 days
+[C1] starts at [B3]'s end
+[Pages connexion / inscription] as [C2] lasts 2 days
+[C2] starts at [C1]'s end
+
+-- Phase 3 : Backend métier --
+[Entités JPA + repositories] as [D1] lasts 3 days
+[D1] starts at [C2]'s end
+[Services taxi / collectif / bus] as [D2] lasts 4 days
+[D2] starts at [D1]'s end
+[API REST + validation + erreurs] as [D3] lasts 3 days
+[D3] starts at [D2]'s end
+[Jalon : API fonctionnelle] happens at [D3]'s end
+
+-- Phase 4 : Frontend web --
+[Tableau de bord + navigation] as [E1] lasts 2 days
+[E1] starts at [D2]'s end
+[Pages réservation + carte Leaflet] as [E2] lasts 5 days
+[E2] starts at [E1]'s end
+[Historique, tickets, profil, admin] as [E3] lasts 3 days
+[E3] starts at [E2]'s end
+
+-- Phase 5 : Temps réel et notifications --
+[Suivi WebSocket STOMP] as [F1] lasts 3 days
+[F1] starts at [E3]'s end
+[Firebase Cloud Messaging Web] as [F2] lasts 2 days
+[F2] starts at [F1]'s end
+
+-- Phase 6 : Tests et livraison --
+[Tests JUnit 5 / Mockito] as [G1] lasts 3 days
+[G1] starts at [F2]'s end
+[Docker, README, documentation] as [G2] lasts 2 days
+[G2] starts at [G1]'s end
+[Jalon : livraison finale] happens at [G2]'s end
+@endgantt

@@ -1,0 +1,37 @@
+@startuml
+title Séquence — Inscription / Connexion (Spring Security + JWT)
+autonumber
+skinparam shadowing false
+actor Client
+participant "React\n(LoginPage)" as UI
+participant "AuthController" as AC
+participant "AuthService" as AS
+participant "UtilisateurRepository" as UR
+participant "JwtService" as JWT
+database MySQL
+
+Client -> UI : Saisit téléphone (+216) et mot de passe
+UI -> UI : Validation du format (8 chiffres)
+UI -> AC : POST /api/auth/login {telephone, motDePasse}
+AC -> AS : login(requete)
+AS -> UR : findByTelephone(telephone)
+UR -> MySQL : SELECT ... FROM utilisateurs
+MySQL --> UR : ligne utilisateur
+UR --> AS : Optional<Utilisateur>
+alt Utilisateur introuvable ou mot de passe incorrect
+  AS --> AC : BadCredentialsException
+  AC --> UI : 401 {message: "Identifiants invalides"}
+  UI --> Client : Message d'erreur en français
+else Identifiants valides
+  AS -> AS : passwordEncoder.matches()
+  AS -> JWT : genererToken(utilisateur, role)
+  JWT --> AS : token signé (HS256, expiration 24 h)
+  AS --> AC : AuthResponse {token, utilisateur}
+  AC --> UI : 200 OK
+  UI -> UI : Stocke le JWT (AuthContext)
+  UI -> UI : Demande permission notifications\net récupère le jeton FCM
+  UI -> AC : PUT /api/users/me/fcm-token {fcmToken}
+  AC --> UI : 204 No Content
+  UI --> Client : Redirection vers le tableau de bord
+end
+@enduml

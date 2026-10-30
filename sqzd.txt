@@ -1,0 +1,26 @@
+(s'il vous plait  ne donne pas un  projet directement zip  s'il vous plait donne de code et s'il vous plait  faire étape par étape et en détail)
+2. Vérifier les données dans Adminer. Ouvrez http://localhost:8081 et connectez-vous avec :
+
+Système : MySQL
+Serveur : mysql
+Utilisateur : transporttn
+Mot de passe : transporttn_2026
+Base : transporttn
+
+3.5 Les exceptions et le format d’erreur commun
+
+On commence par les erreurs, car toutes les autres classes les utilisent.
+
+Toutes les erreurs de l’API auront exactement cette forme :
+
+json
+{
+  "horodatage": "2026-11-12T10:15:30.123",
+  "statut": 400,
+  "erreur": "Requête invalide",
+  "message": "Certains champs sont invalides",
+  "chemin": "/api/auth/inscription",
+  "details": {
+    "motDePasse": "Le mot de passe doit contenir 8 à 72 caractères, avec au moins une lettre et un chiffre"
+  }
+}

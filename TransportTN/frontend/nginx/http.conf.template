@@ -1,0 +1,34 @@
+# Mode HTTP : utilisé tant qu'aucun certificat Let's Encrypt n'existe
+# (premier démarrage, ou test local avec DOMAINE=localhost).
+server {
+    listen 80;
+    server_name ${DOMAINE};
+
+    # Défi Let's Encrypt : prouve que nous contrôlons le domaine
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+ # Tout le reste passe en HTTPS
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name ${DOMAINE};
+
+    ssl_certificate     /etc/letsencrypt/live/${DOMAINE}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${DOMAINE}/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers off;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 1d;
+
+    # Le navigateur n'utilisera plus que HTTPS pendant 1 an
+    add_header Strict-Transport-Security "max-age=31536000" always;
+
+    include /etc/nginx/snippets/application.conf;
+}

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TransportTN</string>
+
+    <string name="login_title">Connexion</string>
+    <string name="login_subtitle">Entrez votre numero de telephone</string>
+    <string name="phone_hint">+216 XX XXX XXX</string>
+    <string name="btn_send_code">Envoyer le code</string>
+
+    <string name="otp_title">Verification</string>
+    <string name="otp_subtitle">Entrez le code recu par SMS</string>
+    <string name="otp_hint">Code a 6 chiffres</string>
+    <string name="name_hint">Votre nom complet</string>
+    <string name="btn_verify">Verifier</string>
+    <string name="btn_resend">Renvoyer le code</string>
+
+    <string name="home_taxi">Taxi</string>
+    <string name="home_collectif">Collectif</string>
+    <string name="home_bus">Bus</string>
+    <string name="home_profil">Profil</string>
+
+    <string name="taxi_pickup_hint">Adresse de depart</string>
+    <string name="taxi_dropoff_hint">Adresse d\'arrivee</string>
+    <string name="btn_confirm_reservation">Confirmer la reservation</string>
+    <string name="payment_especes">Especes</string>
+    <string name="payment_carte">Carte bancaire</string>
+
+    <string name="bus_select_line">Choisir une ligne</string>
+    <string name="bus_select_date">Date du voyage</string>
+    <string name="bus_quantity">Quantite de tickets</string>
+    <string name="btn_buy_ticket">Acheter le ticket</string>
+
+    <string name="error_generic">Une erreur est survenue. Veuillez reessayer.</string>
+    <string name="error_network">Verifiez votre connexion internet.</string>
+</resources>

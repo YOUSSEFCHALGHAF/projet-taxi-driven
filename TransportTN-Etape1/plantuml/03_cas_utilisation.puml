@@ -1,0 +1,87 @@
+@startuml
+title TransportTN — Diagramme de cas d'utilisation
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam usecase {
+  BackgroundColor #E3F2FD
+  BorderColor #1565C0
+}
+
+actor "Visiteur" as V
+actor "Client" as C
+actor "Chauffeur" as D
+actor "Administrateur" as A
+actor "Firebase Cloud\nMessaging" as FCM <<système>>
+
+V <|-- C
+
+rectangle "Plateforme TransportTN" {
+  usecase "Consulter les services\net les lignes" as UC0
+  usecase "S'inscrire" as UC1
+  usecase "Se connecter" as UC2
+  usecase "Gérer son profil" as UC3
+
+  usecase "Réserver un taxi privé" as UC10
+  usecase "Estimer le prix" as UC11
+  usecase "Suivre le chauffeur\nen temps réel" as UC12
+  usecase "Annuler une réservation" as UC13
+
+  usecase "Réserver des places\nen taxi collectif" as UC20
+  usecase "Vérifier la disponibilité\ndes places" as UC21
+
+  usecase "Acheter des tickets de bus" as UC30
+  usecase "Générer le QR code" as UC31
+  usecase "Consulter mes tickets" as UC32
+  usecase "Consulter l'historique" as UC33
+
+  usecase "Gérer sa disponibilité" as UC40
+  usecase "Accepter / refuser une course" as UC41
+  usecase "Démarrer / terminer une course" as UC42
+  usecase "Partager sa position" as UC43
+
+  usecase "Gérer les lignes" as UC50
+  usecase "Gérer les départs (horaires)" as UC51
+  usecase "Gérer les chauffeurs" as UC52
+  usecase "Consulter les statistiques" as UC53
+
+  usecase "Recevoir une notification" as UC60
+}
+
+V --> UC0
+V --> UC1
+V --> UC2
+
+C --> UC3
+C --> UC10
+C --> UC20
+C --> UC30
+C --> UC32
+C --> UC33
+C --> UC13
+C --> UC12
+C --> UC60
+
+UC10 ..> UC11 : <<include>>
+UC20 ..> UC21 : <<include>>
+UC30 ..> UC31 : <<include>>
+UC12 ..> UC10 : <<extend>>
+UC10 ..> UC2 : <<include>>
+UC20 ..> UC2 : <<include>>
+UC30 ..> UC2 : <<include>>
+
+D --> UC2
+D --> UC40
+D --> UC41
+D --> UC42
+D --> UC43
+D --> UC60
+
+A --> UC2
+A --> UC50
+A --> UC51
+A --> UC52
+A --> UC53
+
+UC60 <-- FCM
+@enduml

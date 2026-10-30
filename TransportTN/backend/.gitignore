@@ -1,0 +1,3 @@
+target/
+firebase-service-account.json
+*-firebase-adminsdk-*.json

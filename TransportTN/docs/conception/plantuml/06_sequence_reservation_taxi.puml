@@ -1,0 +1,59 @@
+@startuml
+title Séquence — Réservation taxi privé + notification FCM + suivi temps réel
+autonumber
+skinparam shadowing false
+skinparam maxMessageSize 160
+actor Client
+participant "React\n(TaxiPage)" as UI
+participant "JwtFilter" as F
+participant "ReservationController" as RC
+participant "TaxiService" as TS
+participant "ChauffeurRepository" as CR
+participant "ReservationRepository" as RR
+participant "NotificationService" as NS
+participant "Firebase\nCloud Messaging" as FCM
+participant "React\n(DriverPage)" as DUI
+actor Chauffeur
+participant "WebSocket\nSTOMP broker" as WS
+
+Client -> UI : Choisit départ et arrivée sur la carte
+UI -> RC : POST /api/reservations/taxi/estimation
+RC --> UI : {distanceKm, prixEstime}
+Client -> UI : Confirme (mode de paiement)
+UI -> F : POST /api/reservations/taxi + Bearer JWT
+F -> F : Valide le JWT, rôle CLIENT
+F -> RC : requête authentifiée
+RC -> TS : creerReservation(dto, client)
+TS -> CR : findByDisponibleTrue()
+CR --> TS : chauffeurs disponibles
+TS -> TS : Choisit le plus proche (Haversine)
+alt Aucun chauffeur disponible
+  TS --> RC : AucunChauffeurException
+  RC --> UI : 409 {message: "Aucun chauffeur disponible"}
+else Chauffeur trouvé
+  TS -> RR : save(reservation EN_ATTENTE)
+  TS -> NS : notifier(chauffeur, "Nouvelle course")
+  NS -> NS : Enregistre Notification (MySQL)
+  NS -> FCM : send(fcmToken chauffeur)
+  FCM --> DUI : Notification navigateur
+  TS --> RC : ReservationDto
+  RC --> UI : 201 Created
+  UI --> Client : "En attente du chauffeur"
+end
+
+Chauffeur -> DUI : Accepte la course
+DUI -> RC : PUT /api/reservations/{id}/status {ACCEPTEE}
+RC -> TS : changerStatut(id, ACCEPTEE)
+TS -> NS : notifier(client, "Chauffeur en route")
+NS -> FCM : send(fcmToken client)
+FCM --> UI : Notification navigateur
+
+loop toutes les 5 secondes (course ACCEPTEE / EN_COURS)
+  DUI -> DUI : navigator.geolocation.watchPosition()
+  DUI -> RC : PUT /api/driver/location {lat, lng}
+  RC -> TS : mettreAJourPosition()
+  TS -> WS : convertAndSend(/topic/course/{id}, position)
+  WS --> UI : position du chauffeur
+  UI -> UI : Déplace le marqueur sur la carte
+end
+@enduml

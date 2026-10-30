@@ -1,0 +1,15 @@
+{
+  "_comment": "Fichier de configuration Firebase (placeholder). Remplacez par le vrai google-services.json telecharge depuis la Console Firebase (Parametres du projet > Vos applications > Android). Renommez ce fichier en 'google-services.json' et placez-le dans le dossier app/.",
+  "project_info": {
+    "project_id": "transporttn-XXXXX"
+  },
+  "client": [
+    {
+      "client_info": {
+        "android_client_info": {
+          "package_name": "com.transporttn.app"
+        }
+      }
+    }
+  ]
+}

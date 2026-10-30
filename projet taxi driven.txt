@@ -1,0 +1,2 @@
+Bonjour Claude, J'ai un projet de développement mobile, est-ce que tu peux m'aider ?
+À partir de ce sujet, J'ai une idée de projet mobile utilisant les technologies suivantes : Android Studio pour le développement frontend, Firebase, un backend en Spring Boot (Java) et une base de données MySQL. Le projet consiste en une application mobile de réservation de taxi, de taxi collectif (réservation de places) ou de bus via un système de tickets, adaptée au contexte tunisien.    (s'il vous plait, faire étape par étape et en détail).

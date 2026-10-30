@@ -1,0 +1,42 @@
+@startuml
+title Séquence — Réservation de places en taxi collectif
+autonumber
+skinparam shadowing false
+actor Client
+participant "React\n(CollectifPage)" as UI
+participant "LigneController" as LC
+participant "ReservationController" as RC
+participant "CollectifService" as CS
+participant "DepartRepository" as DR
+participant "ReservationRepository" as RR
+participant "NotificationService" as NS
+participant "Firebase\nCloud Messaging" as FCM
+database MySQL
+
+Client -> UI : Ouvre "Taxi collectif"
+UI -> LC : GET /api/lignes?type=COLLECTIF
+LC --> UI : liste des lignes
+Client -> UI : Choisit ligne + départ
+UI -> LC : GET /api/lignes/{id}/departs?date=...
+LC --> UI : départs avec placesRestantes
+Client -> UI : Sélectionne 1 à 4 places
+UI -> RC : POST /api/reservations/collectif {departId, nombrePlaces}
+RC -> CS : reserver(dto, client)
+note right of CS : @Transactional\nverrou optimiste (@Version)
+CS -> DR : findById(departId)
+DR --> CS : Depart
+alt nombrePlaces hors [1..4] ou > placesRestantes
+  CS --> RC : PlacesInsuffisantesException
+  RC --> UI : 400 {message: "Places insuffisantes"}
+else Places disponibles
+  CS -> CS : depart.reserver(nombrePlaces)
+  CS -> DR : save(depart)
+  CS -> RR : save(ReservationCollectif ACCEPTEE)
+  RR -> MySQL : INSERT / UPDATE (commit)
+  CS -> NS : notifier(client, "Places confirmées")
+  NS -> FCM : send(fcmToken)
+  CS --> RC : ReservationDto
+  RC --> UI : 201 Created
+  UI --> Client : Récapitulatif de la réservation
+end
+@enduml

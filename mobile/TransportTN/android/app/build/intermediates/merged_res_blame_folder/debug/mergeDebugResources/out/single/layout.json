@@ -1,0 +1,50 @@
+[
+    {
+        "merged": "com.transporttn.app-mergeDebugResources-42:/layout/fragment_taxi.xml",
+        "source": "com.transporttn.app-main-45:/layout/fragment_taxi.xml"
+    },
+    {
+        "merged": "com.transporttn.app-mergeDebugResources-42:/layout/activity_otp.xml",
+        "source": "com.transporttn.app-main-45:/layout/activity_otp.xml"
+    },
+    {
+        "merged": "com.transporttn.app-mergeDebugResources-42:/layout/activity_main.xml",
+        "source": "com.transporttn.app-main-45:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.transporttn.app-mergeDebugResources-42:/layout/activity_login.xml",
+        "source": "com.transporttn.app-main-45:/layout/activity_login.xml"
+    },
+    {
+        "merged": "com.transporttn.app-mergeDebugResources-42:/layout/fragment_bus.xml",
+        "source": "com.transporttn.app-main-45:/layout/fragment_bus.xml"
+    },
+    {
+        "merged": "com.transporttn.app-mergeDebugResources-42:/layout/fragment_profil.xml",
+        "source": "com.transporttn.app-main-45:/layout/fragment_profil.xml"
+    },
+    {
+        "merged": "com.transporttn.app-mergeDebugResources-42:/layout/fragment_home.xml",
+        "source": "com.transporttn.app-main-45:/layout/fragment_home.xml"
+    },
+    {
+        "merged": "com.transporttn.app-mergeDebugResources-42:/layout/activity_splash.xml",
+        "source": "com.transporttn.app-main-45:/layout/activity_splash.xml"
+    },
+    {
+        "merged": "com.transporttn.app-mergeDebugResources-42:/layout/activity_ticket_detail.xml",
+        "source": "com.transporttn.app-main-45:/layout/activity_ticket_detail.xml"
+    },
+    {
+        "merged": "com.transporttn.app-mergeDebugResources-42:/layout/activity_taxi_tracking.xml",
+        "source": "com.transporttn.app-main-45:/layout/activity_taxi_tracking.xml"
+    },
+    {
+        "merged": "com.transporttn.app-mergeDebugResources-42:/layout/item_ligne.xml",
+        "source": "com.transporttn.app-main-45:/layout/item_ligne.xml"
+    },
+    {
+        "merged": "com.transporttn.app-mergeDebugResources-42:/layout/fragment_collectif.xml",
+        "source": "com.transporttn.app-main-45:/layout/fragment_collectif.xml"
+    }
+]

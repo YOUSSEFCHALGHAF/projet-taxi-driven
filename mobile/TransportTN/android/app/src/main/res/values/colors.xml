@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Theme drapeau tunisien : rouge / blanc -->
+    <color name="colorPrimary">#E70013</color>
+    <color name="colorPrimaryDark">#B8000F</color>
+    <color name="colorAccent">#E70013</color>
+    <color name="colorBackground">#FFFFFF</color>
+    <color name="colorTextPrimary">#1A1A1A</color>
+    <color name="colorTextSecondary">#666666</color>
+    <color name="colorSuccess">#2E7D32</color>
+    <color name="colorError">#C62828</color>
+    <color name="colorSurfaceGray">#F5F5F5</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+</resources>

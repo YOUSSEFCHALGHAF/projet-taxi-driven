@@ -1,0 +1,156 @@
+@startuml
+title TransportTN — Diagramme de classes (modèle métier)
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam class {
+  BackgroundColor #FAFAFA
+  BorderColor #455A64
+}
+hide empty methods
+
+enum Role {
+  CLIENT
+  DRIVER
+  ADMIN
+}
+enum TypeLigne {
+  BUS
+  COLLECTIF
+}
+enum StatutReservation {
+  EN_ATTENTE
+  ACCEPTEE
+  EN_COURS
+  TERMINEE
+  ANNULEE
+}
+enum StatutTicket {
+  VALIDE
+  UTILISE
+  ANNULE
+}
+enum ModePaiement {
+  ESPECES
+  CARTE
+}
+enum TypeNotification {
+  RESERVATION
+  COURSE
+  TICKET
+  SYSTEME
+}
+
+class Utilisateur {
+  - id : Long
+  - nom : String
+  - prenom : String
+  - telephone : String  <<unique, +216>>
+  - email : String
+  - motDePasse : String  <<BCrypt>>
+  - role : Role
+  - fcmToken : String
+  - actif : boolean
+  - dateCreation : LocalDateTime
+}
+
+class Chauffeur {
+  - id : Long
+  - numeroPermis : String
+  - matricule : String
+  - modeleVehicule : String
+  - disponible : boolean
+  - latitude : Double
+  - longitude : Double
+  - derniereMiseAJour : LocalDateTime
+  + mettreAJourPosition(lat, lng)
+}
+
+class Ligne {
+  - id : Long
+  - type : TypeLigne
+  - villeDepart : String
+  - villeArrivee : String
+  - stationDepart : String
+  - stationArrivee : String
+  - prix : BigDecimal
+  - capacite : int
+  - dureeMinutes : int
+  - active : boolean
+}
+
+class Depart {
+  - id : Long
+  - dateHeure : LocalDateTime
+  - placesTotal : int
+  - placesRestantes : int
+  - @Version version : Long
+  + reserver(nb : int)
+  + liberer(nb : int)
+}
+
+abstract class Reservation {
+  - id : Long
+  - reference : String
+  - montant : BigDecimal
+  - statut : StatutReservation
+  - modePaiement : ModePaiement
+  - dateCreation : LocalDateTime
+  + annuler()
+}
+
+class ReservationTaxi {
+  - adresseDepart : String
+  - latDepart : Double
+  - lngDepart : Double
+  - adresseArrivee : String
+  - latArrivee : Double
+  - lngArrivee : Double
+  - distanceKm : Double
+  + estimerPrix() : BigDecimal
+}
+
+class ReservationCollectif {
+  - nombrePlaces : int  <<1..4>>
+}
+
+class ReservationBus {
+  - nombreTickets : int
+}
+
+class Ticket {
+  - id : Long
+  - codeUnique : String  <<UUID>>
+  - qrCodeBase64 : String
+  - statut : StatutTicket
+  - dateEmission : LocalDateTime
+}
+
+class Notification {
+  - id : Long
+  - titre : String
+  - message : String
+  - type : TypeNotification
+  - lue : boolean
+  - dateEnvoi : LocalDateTime
+}
+
+Reservation <|-- ReservationTaxi
+Reservation <|-- ReservationCollectif
+Reservation <|-- ReservationBus
+
+Utilisateur "1" -- "0..1" Chauffeur : profil >
+Utilisateur "1" -- "0..*" Reservation : client >
+Chauffeur "0..1" -- "0..*" ReservationTaxi : assurée par <
+Ligne "1" *-- "0..*" Depart : planifie >
+Depart "1" -- "0..*" ReservationCollectif : concerne <
+Depart "1" -- "0..*" ReservationBus : concerne <
+ReservationBus "1" *-- "1..*" Ticket : génère >
+Utilisateur "1" -- "0..*" Notification : reçoit >
+
+Utilisateur ..> Role
+Ligne ..> TypeLigne
+Reservation ..> StatutReservation
+Reservation ..> ModePaiement
+Ticket ..> StatutTicket
+Notification ..> TypeNotification
+@enduml

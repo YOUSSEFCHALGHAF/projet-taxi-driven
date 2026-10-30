@@ -1,0 +1,42 @@
+@startuml
+title Séquence — Achat de tickets de bus avec QR code
+autonumber
+skinparam shadowing false
+actor Client
+participant "React\n(BusPage)" as UI
+participant "ReservationController" as RC
+participant "BusService" as BS
+participant "DepartRepository" as DR
+participant "QrCodeService\n(ZXing)" as QR
+participant "TicketRepository" as TR
+participant "NotificationService" as NS
+participant "Firebase\nCloud Messaging" as FCM
+
+Client -> UI : Choisit ligne, date et quantité
+UI -> RC : POST /api/reservations/bus {departId, nombreTickets, modePaiement}
+RC -> BS : acheter(dto, client)
+BS -> DR : findById(departId)
+DR --> BS : Depart
+alt Places insuffisantes ou départ passé
+  BS --> RC : exception métier
+  RC --> UI : 400 {message}
+else OK
+  BS -> BS : depart.reserver(nombreTickets)
+  loop pour chaque ticket
+    BS -> BS : codeUnique = UUID
+    BS -> QR : genererQrCode(codeUnique)
+    QR --> BS : image PNG (Base64)
+    BS -> TR : save(Ticket VALIDE)
+  end
+  BS -> NS : notifier(client, "Tickets confirmés")
+  NS -> FCM : send(fcmToken)
+  BS --> RC : ReservationBusDto + tickets
+  RC --> UI : 201 Created
+  UI --> Client : Affiche les QR codes
+end
+
+== Plus tard ==
+Client -> UI : Ouvre "Mes tickets"
+UI -> RC : GET /api/reservations/tickets
+RC --> UI : liste des tickets + QR codes
+@enduml

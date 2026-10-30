@@ -1,0 +1,48 @@
+@startmindmap
+title TransportTN — Périmètre MVP (Minimum Viable Product)
+caption Firebase utilisé UNIQUEMENT pour les notifications (FCM Web)
+skinparam backgroundColor white
+<style>
+mindmapDiagram {
+  node { BackgroundColor #E3F2FD; LineColor #1565C0; FontSize 13 }
+  :depth(0) { BackgroundColor #1565C0; FontColor white; FontSize 16 }
+  :depth(1) { BackgroundColor #90CAF9 }
+  .p2 { BackgroundColor #FFF3E0 }
+  .p3 { BackgroundColor #EEEEEE }
+}
+</style>
+* TransportTN\nMVP Web
+** Authentification (P1)
+*** Inscription (téléphone +216, mot de passe)
+*** Connexion → JWT (Spring Security)
+*** Rôles CLIENT / DRIVER / ADMIN
+** Taxi privé (P1)
+*** Départ / arrivée sur carte (Leaflet + OSM)
+*** Estimation du prix (distance × tarif km)
+*** Attribution du chauffeur disponible le plus proche
+*** Acceptation / démarrage / fin de course (DRIVER)
+*** Annulation avant prise en charge
+** Taxi collectif (P1)
+*** Liste des lignes et départs
+*** Réservation de 1 à 4 places
+*** Contrôle des places côté serveur
+** Bus interurbain (P1)
+*** Catalogue lignes / horaires / tarifs
+*** Achat de 1 à N tickets
+*** QR code unique par ticket
+left side
+** Suivi temps réel (P1)
+*** Position chauffeur (Geolocation API)
+*** Diffusion WebSocket STOMP
+*** Carte mise à jour côté client
+** Notifications (P1)
+*** Firebase Cloud Messaging Web
+*** Notifications in-app (table MySQL)
+** Historique (P2) <<p2>>
+*** Réservations et tickets passés
+** Profil (P2) <<p2>>
+*** Infos personnelles
+** Administration (P3) <<p3>>
+*** CRUD lignes et départs
+*** Statistiques simples
+@endmindmap

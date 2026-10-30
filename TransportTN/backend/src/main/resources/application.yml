@@ -1,0 +1,44 @@
+# ============================================================
+#  TransportTN — configuration du backend
+#  Les valeurs ${VARIABLE:defaut} peuvent être surchargées par
+#  des variables d'environnement (utile pour Docker / production).
+# ============================================================
+server:
+  port: 8082
+
+spring:
+  application:
+    name: transporttn-backend
+
+  datasource:
+    url: jdbc:mysql://localhost:3307/transporttn
+    username: transporttn
+    password: transporttn_2026
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none          # le schéma est géré par database/init/01_schema.sql
+    open-in-view: false       # pas de requêtes SQL cachées pendant le rendu JSON
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          time_zone: Africa/Tunis
+
+logging:
+  level:
+    org.hibernate.SQL: debug  # affiche les requêtes SQL générées (utile en développement)
+
+app:
+  jwt:
+    # Clé HMAC en Base64 (64 octets). En production, définir la variable d'environnement JWT_SECRET.
+    secret: ${JWT_SECRET:wYOBORKPc3A9BnDljb/doI4bQ8pkpStxFf/GSFnTMstTwQItXnWluA5/w8sXXngsRiA5yRVPjE5Rf1BnzJowAw==}
+    expiration-ms: ${JWT_EXPIRATION_MS:86400000}   # 24 heures
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173,http://127.0.0.1:5173}
+  firebase:
+    # false par défaut : l'application et les tests fonctionnent sans Firebase
+    enabled: ${FIREBASE_ENABLED:false}
+    credentials-path: ${FIREBASE_CREDENTIALS:firebase-service-account.json}

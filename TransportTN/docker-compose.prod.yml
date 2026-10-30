@@ -1,0 +1,103 @@
+# =============================================================
+# TransportTN : déploiement complet (production)
+#   MySQL + backend Spring Boot + Nginx (site, API, WebSocket, HTTPS) + Certbot
+#
+#   cp .env.exemple .env      # puis remplir
+#   docker compose -f docker-compose.prod.yml up -d --build
+#   ./deploiement/init-letsencrypt.sh   # une seule fois, pour obtenir le certificat HTTPS
+# =============================================================
+name: transporttn-prod   # distinct du docker-compose.yml de développement (volumes séparés)
+
+services:
+  mysql:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?définissez MYSQL_ROOT_PASSWORD dans .env}
+      MYSQL_DATABASE: transporttn
+      MYSQL_USER: transporttn
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?définissez MYSQL_PASSWORD dans .env}
+      TZ: Africa/Tunis
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-time-zone=+01:00
+    volumes:
+      - mysql_data:/var/lib/mysql
+      # Schéma + données de démonstration (exécutés au premier démarrage uniquement)
+      - ./database/init:/docker-entrypoint-initdb.d:ro
+    # Aucun port publié : MySQL n'est accessible que depuis le réseau interne Docker
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$$MYSQL_ROOT_PASSWORD"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    image: transporttn-backend:latest
+    restart: unless-stopped
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/transporttn?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Africa/Tunis&characterEncoding=UTF-8
+      DB_USERNAME: transporttn
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET:?définissez JWT_SECRET dans .env}
+      # Origines autorisées pour le WebSocket (le navigateur envoie l'en-tête Origin)
+      CORS_ALLOWED_ORIGINS: https://${DOMAINE:-localhost},http://${DOMAINE:-localhost}
+      FIREBASE_ENABLED: ${FIREBASE_ENABLED:-false}
+      FIREBASE_CREDENTIALS: /run/secrets/firebase-service-account.json
+      SERVER_FORWARD_HEADERS_STRATEGY: native   # lit X-Forwarded-Proto envoyé par Nginx
+      LOG_SQL: warn                             # pas de requêtes SQL dans les logs de production
+      TZ: Africa/Tunis
+    volumes:
+      - ./secrets:/run/secrets:ro
+    depends_on:
+      mysql:
+        condition: service_healthy
+    # Aucun port publié : seul Nginx parle au backend
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:8080/api/lignes || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+
+  nginx:
+    build:
+      context: ./frontend
+      args:
+        VITE_FIREBASE_API_KEY: ${VITE_FIREBASE_API_KEY:-}
+        VITE_FIREBASE_AUTH_DOMAIN: ${VITE_FIREBASE_AUTH_DOMAIN:-}
+        VITE_FIREBASE_PROJECT_ID: ${VITE_FIREBASE_PROJECT_ID:-}
+        VITE_FIREBASE_MESSAGING_SENDER_ID: ${VITE_FIREBASE_MESSAGING_SENDER_ID:-}
+        VITE_FIREBASE_APP_ID: ${VITE_FIREBASE_APP_ID:-}
+        VITE_FIREBASE_VAPID_KEY: ${VITE_FIREBASE_VAPID_KEY:-}
+    image: transporttn-frontend:latest
+    restart: unless-stopped
+    environment:
+      DOMAINE: ${DOMAINE:-localhost}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - certbot_conf:/etc/letsencrypt:ro
+      - certbot_www:/var/www/certbot:ro
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  # Renouvelle le certificat automatiquement (vérification toutes les 12 h)
+  certbot:
+    image: certbot/certbot:latest
+    restart: unless-stopped
+    volumes:
+      - certbot_conf:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    entrypoint: >-
+      /bin/sh -c 'trap exit TERM;
+      while :; do certbot renew --webroot -w /var/www/certbot --quiet; sleep 12h & wait $${!}; done'
+
+volumes:
+  mysql_data:
+  certbot_conf:
+  certbot_www:

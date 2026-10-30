@@ -1,0 +1,46 @@
+# ============================================================
+#  TransportTN — services de développement
+#  Démarrage :  docker compose up -d
+#  Arrêt     :  docker compose down        (garde les données)
+#  Reset BDD :  docker compose down -v     (supprime les données,
+#               les scripts database/*.sql seront rejoués)
+# ============================================================
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: transporttn-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_tn_2026
+      MYSQL_DATABASE: transporttn
+      MYSQL_USER: transporttn
+      MYSQL_PASSWORD: transporttn_2026
+      TZ: Africa/Tunis
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-time-zone=+01:00
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init:/docker-entrypoint-initdb.d:ro
+      - ./database:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot_tn_2026"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  adminer:
+    image: adminer:4
+    container_name: transporttn-adminer
+    restart: unless-stopped
+    ports:
+      - "8081:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+volumes:
+  mysql_data:

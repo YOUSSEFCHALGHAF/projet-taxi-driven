@@ -1,0 +1,16 @@
+target/
+*.class
+*.log
+.idea/
+*.iml
+.settings/
+.classpath
+.project
+HELP.md
+
+# Fichier de credentials Firebase - NE JAMAIS COMMITER
+firebase-service-account.json
+
+# Config locale eventuelle
+application-local.properties
+application-prod.properties
